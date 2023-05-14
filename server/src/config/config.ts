@@ -2,11 +2,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const MONGO_USERNAME = process.env.MONGO_USERNAME || 'mo1175_staging'
-const MONGO_PASSWORD = process.env.MONGO_PASSWORD  || '!Blueform13'
-const MONGO_URL =  process.env.MONGO
+const MONGO_USERNAME = process.env.MONGO_USERNAME || ''
+const MONGO_PASSWORD = process.env.MONGO_PASSWORD || ''
+const MONGO_URL = process.env.MONGO
 
-const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 3000
+const SERVER_PORT = process.env.PORT ? Number(process.env.PORT) : 8000
 
 
 export const config = {
@@ -15,5 +15,12 @@ export const config = {
     },
     server: {
         port: SERVER_PORT
+    },
+    mysql: {
+        DB_HOST: '127.0.0.1',
+        DB_USER: 'root',
+        DB_PASS: 'root',
+        DB_NAME: 'shop',
+        DB_CONNECTION_LIMIT: 10
     }
 }
