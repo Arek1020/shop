@@ -9,6 +9,7 @@ const productController = new ProductController();
 router.get('/', productController.get);
 router.post('/', productController.edit);
 router.post('/:id', productController.edit);
+//iki
 // router.post('/users', productController.delete);
 
 // router.post('/users', (req: Request, res: Response) => {
