@@ -1,5 +1,9 @@
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { useFormik, Formik } from "formik";
+import moment from 'moment'
+import request from "../utils/Request";
+import { toast } from 'react-toastify';
 
 const Container = styled.div`
   width: 100vw;
@@ -55,23 +59,135 @@ const Button = styled.button`
 `;
 
 const Register = () => {
+
+  // const formik = useFormik({
+  //   initialValues: {},
+  //   validate: (values) => {
+  //     const errors = {};
+  //     values.Godziny_pracy?.forEach((x, index) => {
+  //       if (!x.from || !x.to)
+  //         errors['Godziny_pracy_' + index] = 'Uzupełnij godziny pracy.'
+  //       if (moment(x.from).isAfter(x.to, 'hours'))
+  //         errors['Godziny_pracy_' + index] = 'Data zakończnia nie może być wcześniej niż data rozpoczęcie.'
+  //     })
+  //     return errors;
+  //   },
+  //   onSubmit: async (values) => {
+  //     console.log('asdfs', values)
+  //     formik.validateForm();
+  //     request(`/login`, values)
+
+  //   },
+  // })
+
   return (
     <Container>
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
-        <Form>
-          <Input placeholder="name" />
-          <Input placeholder="last name" />
-          <Input placeholder="username" />
-          <Input placeholder="email" />
-          <Input placeholder="password" />
-          <Input placeholder="confirm password" />
-          <Agreement>
-            By creating an account, I consent to the processing of my personal
-            data in accordance with the <b>PRIVACY POLICY</b>
-          </Agreement>
-          <Button>CREATE</Button>
-        </Form>
+        <Formik
+          initialValues={{ email: '', password: '' }}
+          validate={values => {
+            const errors = {};
+            if (!values.email) {
+              errors.email = 'Required';
+            } else if (
+              !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
+            ) {
+              errors.email = 'Invalid email address';
+            }
+            return errors;
+          }}
+          onSubmit={async (values, { setSubmitting }) => {
+            toast.promise(
+              request(`/user/register`, values),
+              {
+                pending: 'Promise is pending',
+                success:  {render({data}){
+                  window.location.href = '/login'
+                  return `${data.msg}`
+                }},
+                error: {render({data}){
+                  return `${data[0]}`
+                }},
+              }
+          )
+            // request(`/user/register`, values)
+            //   .then((resp) => {
+            //     console.log('rr', resp)
+            //     if (resp.err)
+            //       alert(resp.msg)
+            //   })
+            //   .catch(err => alert(err[0]))
+          }}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            isSubmitting,
+            /* and other goodies */
+          }) => (
+            <Form onSubmit={handleSubmit}>
+              {/* <Input placeholder="name" />
+              <Input placeholder="last name" />
+              <Input placeholder="username" />
+
+              <Input placeholder="password" />
+              <Input placeholder="confirm password" /> */}
+              <Input
+                placeholder="Imie"
+                type="name"
+                name="firstName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.name}
+              /><Input
+                placeholder="Nazwisko"
+                // type="email"
+                name="lastName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.lastname}
+              /><Input
+                placeholder="Login"
+                type="login"
+                name="userName"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.login}
+              /><Input
+                placeholder="Email"
+                type="email"
+                name="email"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+              /><Input
+                placeholder="Hasło"
+                type="password"
+                name="password"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.password}
+              /><Input
+                placeholder="Powtórz hasło"
+                type="password"
+                name="repeatPassword"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.reapeatPassword}
+              />
+              <Agreement>
+                By creating an account, I consent to the processing of my personal
+                data in accordance with the <b>PRIVACY POLICY</b>
+              </Agreement>
+              <Button>CREATE</Button>
+            </Form>
+          )}
+        </Formik>
       </Wrapper>
     </Container>
   );

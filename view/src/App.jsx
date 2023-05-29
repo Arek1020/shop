@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Cart from "./pages/Cart";
 import CMSProducts from "./pages/CMS/Products";
 import CMSOrders from "./pages/CMS/Orders";
+import CMSLayout from "./pages/CMS/Layout";
 import { Routes, Route } from 'react-router-dom';
 import { RequireAuth } from 'react-auth-kit'
 
@@ -24,8 +25,8 @@ const App = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/product/:id" element={<Product />} />
 
-      <Route path="/cms/products" element={<CMSProducts />} />
-      <Route path="/product/orders" element={<CMSOrders />} />
+      <Route path="/cms/products" element={<CMSLayout><CMSProducts /></CMSLayout>} />
+      <Route path="/cms/orders" element={<CMSLayout><CMSOrders /></CMSLayout>} />
 
       {/* </Route> */}
 

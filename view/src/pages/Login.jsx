@@ -1,5 +1,9 @@
 import styled from "styled-components";
-import {mobile} from "../responsive";
+import { mobile } from "../responsive";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import request from "../utils/Request";
+import { toast } from 'react-toastify';
 
 const Container = styled.div`
   width: 100vw;
@@ -50,25 +54,55 @@ const Button = styled.button`
   margin-bottom: 10px;
 `;
 
-const Link = styled.a`
-  margin: 5px 0px;
-  font-size: 12px;
-  text-decoration: underline;
-  cursor: pointer;
-`;
+// const Link = styled.a`
+//   margin: 5px 0px;
+//   font-size: 12px;
+//   text-decoration: underline;
+//   cursor: pointer;
+// `;
+
+
 
 const Login = () => {
+
+  const [email, setEmail] = useState(null);
+  const [password, setPassword] = useState(null)
+
+  const handleSubmit = (event) => {
+    console.log('sadfsa', email, password)
+    toast.promise(
+      request(`/user/login`, { email, password }),
+      {
+        pending: 'Promise is pending',
+        success: {
+          render({ data }) {
+            setTimeout(() => { window.location.href = '/'}, 4000)
+
+            return `${data.msg}`
+          }
+        },
+        error: {
+          render({ data }) {
+            return `${data[0]}`
+          }
+        },
+      }
+    )
+  }
+
+
+
   return (
     <Container>
       <Wrapper>
-        <Title>SIGN IN</Title>
-        <Form>
-          <Input placeholder="username" />
-          <Input placeholder="password" />
-          <Button>LOGIN</Button>
-          <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-          <Link>CREATE A NEW ACCOUNT</Link>
-        </Form>
+        <Title>ZALOGUJ SIĘ</Title>
+        {/* <Form> */}
+          <Input placeholder="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input placeholder="hasło" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Button onClick={handleSubmit}>LOGIN</Button>
+          {/* <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link> */}
+          <Link to='/register'>STWÓRZ NOWE KONTO</Link>
+        {/* </Form> */}
       </Wrapper>
     </Container>
   );

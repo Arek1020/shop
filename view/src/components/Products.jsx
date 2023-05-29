@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { popularProducts } from "../data";
+// import { popularProducts } from "../data";
 import Product from "./Product";
-import { useEffect } from "react";
-import { SERVER_URL } from './../../../config/client/config'
-
+import { useEffect, useState } from "react";
+// import { SERVER_URL } from './../config';
+import request from "../utils/Request";
 
 const Container = styled.div`
     padding: 20px;
@@ -14,12 +14,18 @@ const Container = styled.div`
 
 const Products = () => {
 
+  const [data, setData] = useState([]);
+
   useEffect(() => {
-    fetch(`${SERVER_URL}/products`)
-  })
+    // request(`/products`)
+    //   .then((result) => {
+    //     console.log('sdfgdsz', result)
+    //     setData(result)
+    //   })
+  }, [])
   return (
     <Container>
-      {popularProducts.map((item) => (
+      {data.map((item) => (
         <Product item={item} key={item.id} />
       ))}
     </Container>

@@ -5,13 +5,17 @@ import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import Newsletter from "../components/Newsletter";
 import { mobile } from "../responsive";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import request from "../utils/Request";
+import { SERVER_URL } from "../config";
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 50px;
   display: flex;
-  ${mobile({ padding: "10px", flexDirection:"column" })}
+  ${mobile({ padding: "10px", flexDirection: "column" })}
 `;
 
 const ImgContainer = styled.div`
@@ -81,8 +85,8 @@ const FilterSizeOption = styled.option``;
 const AddContainer = styled.div`
   width: 50%;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  flex-direction: column;
   ${mobile({ width: "100%" })}
 `;
 
@@ -115,7 +119,20 @@ const Button = styled.button`
   }
 `;
 
-const Product = () => {
+const Product = (props) => {
+  const params = useParams()
+  console.log('dsad', params)
+
+  const [data, setData] = useState({})
+
+  useEffect(() => {
+    request(`/products`, { id: params?.id })
+      .then((r) => { setData(r[0]) })
+  }, [])
+
+  const [usersAmount, setUsersAmount] = useState(1);
+  const [period, setPeriod] = useState(1)
+
   return (
     <Container>
       <Navbar />
@@ -125,17 +142,13 @@ const Product = () => {
           <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
         </ImgContainer>
         <InfoContainer>
-          <Title>Denim Jumpsuit</Title>
+          <Title>{data?.Nazwa}</Title>
           <Desc>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            venenatis, dolor in finibus malesuada, lectus ipsum porta nunc, at
-            iaculis arcu nisi sed mauris. Nulla fermentum vestibulum ex, eget
-            tristique tortor pretium ut. Curabitur elit justo, consequat id
-            condimentum ac, volutpat ornare.
+            {data?.Opis}
           </Desc>
-          <Price>$ 20</Price>
+          <Price>{data?.Cena} pln</Price>
           <FilterContainer>
-            <Filter>
+            {/* <Filter>
               <FilterTitle>Color</FilterTitle>
               <FilterColor color="black" />
               <FilterColor color="darkblue" />
@@ -150,15 +163,25 @@ const Product = () => {
                 <FilterSizeOption>L</FilterSizeOption>
                 <FilterSizeOption>XL</FilterSizeOption>
               </FilterSize>
-            </Filter>
+            </Filter> */}
           </FilterContainer>
           <AddContainer>
             <AmountContainer>
-              <Remove />
-              <Amount>1</Amount>
-              <Add />
+              Ilość użytkowników
+              <Remove onClick={() => setUsersAmount(usersAmount-1)} />
+              <Amount>{usersAmount}</Amount>
+              <Add onClick={() => setUsersAmount(usersAmount+1)} />
             </AmountContainer>
-            <Button>ADD TO CART</Button>
+            <br></br>
+            <AmountContainer>
+              Czas trwania
+              <Remove onClick={() => setPeriod(period-1)} />
+              <Amount>{period}</Amount>
+              <Add onClick={() => setPeriod(period+1)} />
+            </AmountContainer>
+            <br></br>
+
+            <Button>Dodaj do koszyka</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

@@ -6,6 +6,7 @@ import {
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { SERVER_URL } from "../config";
 
 const Info = styled.div`
   width: 100%;
@@ -90,13 +91,13 @@ const Product = ({ item }) => {
   const [menuVisible, setMenuVisible] = useState(false)
   return (
     <Link
-      to={'/product/2'}
+      to={'/product/'+item.id}
       style={styles.container}
       onMouseEnter={() => setMenuVisible(true)}
       onMouseLeave={() => setMenuVisible(false)}
     >
       <Circle />
-      <Image src={item.img} />
+      <Image src={SERVER_URL + '/' + item.Logo_url} />
       <Info style={{ opacity: menuVisible ? 1 : 0 }}>
         <Icon>
           <ShoppingCartOutlined />

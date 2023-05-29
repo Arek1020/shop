@@ -1,8 +1,10 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@material-ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { sliderItems } from "../data";
 import { mobile } from "../responsive";
+import request from "../utils/Request";
+import { SERVER_URL } from "../config";
 
 const Container = styled.div`
   width: 100%;
@@ -48,8 +50,9 @@ const Slide = styled.div`
 `;
 
 const ImgContainer = styled.div`
-  height: 100%;
+  height: 50%;
   flex: 1;
+  margin-left: 80px;
 `;
 
 const Image = styled.img`
@@ -79,6 +82,24 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
+const shuffle = (array) => {
+  let currentIndex = array.length, randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex != 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
 const Slider = () => {
   const [slideIndex, setSlideIndex] = useState(0);
   const handleClick = (direction) => {
@@ -89,20 +110,30 @@ const Slider = () => {
     }
   };
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    request(`/products`, {})
+      .then((r) => {
+        shuffle(r)
+        setData(r)
+      })
+  }, [])
+
   return (
     <Container>
       <Arrow direction="left" onClick={() => handleClick("left")}>
         <ArrowLeftOutlined />
       </Arrow>
       <Wrapper slideIndex={slideIndex}>
-        {sliderItems.map((item) => (
+        {data.map((item) => (
           <Slide bg={item.bg} key={item.id}>
             <ImgContainer>
-              <Image src={item.img} />
+              <Image src={SERVER_URL + '' + item.Logo_url} />
             </ImgContainer>
             <InfoContainer>
               <Title>{item.title}</Title>
-              <Desc>{item.desc}</Desc>
+              <Desc>{item.Opis_skrot}</Desc>
               <Button>SHOW NOW</Button>
             </InfoContainer>
           </Slide>

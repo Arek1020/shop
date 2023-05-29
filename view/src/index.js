@@ -5,7 +5,8 @@ import App from './App.jsx';
 import { AuthProvider } from 'react-auth-kit'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // import refreshApi from './refreshApi';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // const root = ReactDOM.createRoot(document.getElementById('root'))
 
 ReactDOM.render(
@@ -17,7 +18,7 @@ ReactDOM.render(
         cookieSecure={false}
       // refresh={refreshApi}
       >
-
+        <ToastContainer />
         {/* cookieSecure={window.location.protocol === "https:"}> */}
         <Routes>
           <Route path="/*" element={<App />} />
