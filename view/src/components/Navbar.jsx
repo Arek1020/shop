@@ -68,6 +68,9 @@ const MenuItem = styled.div`
 `;
 
 const Navbar = () => {
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  console.log('ssss', user)
   return (
     <Container>
       <Wrapper>
@@ -85,9 +88,14 @@ const Navbar = () => {
         </Center>
         <Right>
           <MenuItem>
-            <Link to={'/login'} style={{ textDecoration: 'none', color: '#000' }}>
-              ZALOGUJ SIĘ
-            </Link>
+            {user ? (
+              <div>Witaj! {user?.firstName}</div>
+            ) : (
+              <Link to={'/login'} style={{ textDecoration: 'none', color: '#000' }}>
+                ZALOGUJ SIĘ
+              </Link>
+            )}
+
           </MenuItem>
           <MenuItem>
             <Link to={'/cart'} style={{ textDecoration: 'none' }} >
@@ -98,7 +106,7 @@ const Navbar = () => {
           </MenuItem>
         </Right>
       </Wrapper>
-    </Container>
+    </Container >
   );
 };
 

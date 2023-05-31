@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import request from "../utils/Request";
 import { SERVER_URL } from "../config";
+import { toast } from 'react-toastify';
 
 const Container = styled.div``;
 
@@ -127,11 +128,42 @@ const Product = (props) => {
 
   useEffect(() => {
     request(`/products`, { id: params?.id })
-      .then((r) => { setData(r[0]) })
+      .then((r) => { setData(r) })
   }, [])
 
   const [usersAmount, setUsersAmount] = useState(1);
   const [period, setPeriod] = useState(1)
+  const [price, setPrice] = useState(0)
+
+  useEffect(() => {
+    setPrice(data.price)
+  }, [data])
+
+  const addToCart = () => {
+    let userDetails = JSON.parse(localStorage.getItem('user'))
+    toast.promise(
+      request(`/cart/update`, {
+        ...data,
+        product: data.id,
+        user: userDetails.id,
+        sum: price,
+        orderDetails: { usersAmount, period }
+      }),
+      {
+        pending: 'Promise is pending',
+        success: {
+          render({ data }) {
+            return `${data.msg}`
+          }
+        },
+        error: {
+          render({ data }) {
+            return `${data[0]}`
+          }
+        },
+      }
+    )
+  }
 
   return (
     <Container>
@@ -142,11 +174,11 @@ const Product = (props) => {
           <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
         </ImgContainer>
         <InfoContainer>
-          <Title>{data?.Nazwa}</Title>
+          <Title>{data?.name}</Title>
           <Desc>
-            {data?.Opis}
+            {data?.description}
           </Desc>
-          <Price>{data?.Cena} pln</Price>
+          <Price>{price} pln</Price>
           <FilterContainer>
             {/* <Filter>
               <FilterTitle>Color</FilterTitle>
@@ -168,20 +200,43 @@ const Product = (props) => {
           <AddContainer>
             <AmountContainer>
               Ilość użytkowników
-              <Remove onClick={() => setUsersAmount(usersAmount-1)} />
+              <Remove onClick={() => {
+                if (usersAmount <= 1)
+                  return
+                let i = data.price * 0.8
+                setPrice(price - 20)
+                setUsersAmount(usersAmount - 1)
+              }
+              } />
               <Amount>{usersAmount}</Amount>
-              <Add onClick={() => setUsersAmount(usersAmount+1)} />
+              <Add onClick={() => {
+                let i = data.price * 0.8
+                setPrice(price + 20)
+                setUsersAmount(usersAmount + 1)
+              }
+              } />
             </AmountContainer>
             <br></br>
             <AmountContainer>
               Czas trwania
-              <Remove onClick={() => setPeriod(period-1)} />
+              <Remove onClick={() => {
+                if (period <= 1)
+                  return
+                setPrice(price - 8.5)
+                setPeriod(period - 1)
+              }} />
               <Amount>{period}</Amount>
-              <Add onClick={() => setPeriod(period+1)} />
+              <Add onClick={() => {
+
+                setPrice(price + 8.5)
+                setPeriod(period + 1)
+              }} />
             </AmountContainer>
             <br></br>
 
-            <Button>Dodaj do koszyka</Button>
+            <Button onClick={() => { addToCart() }}>
+              Dodaj do koszyka
+            </Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

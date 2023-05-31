@@ -1,16 +1,19 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
-export class Product {
+export class Cart {
 
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    name: string
+    date: string
 
     @Column()
-    description: string
+    product: number
+
+    @Column()
+    user: number
 
     @Column()
     price: number
@@ -18,11 +21,8 @@ export class Product {
     @Column({
         nullable: true
     })
-    image: string
+    orderDetails: string
 
-    @Column({
-        nullable: true
-    })
-    quantity: number
+   
 
 }

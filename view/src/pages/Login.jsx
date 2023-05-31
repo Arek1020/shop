@@ -76,6 +76,8 @@ const Login = () => {
         pending: 'Promise is pending',
         success: {
           render({ data }) {
+            localStorage.setItem('token', data.token)
+            localStorage.setItem('user', JSON.stringify(data.user))
             setTimeout(() => { window.location.href = '/'}, 4000)
 
             return `${data.msg}`

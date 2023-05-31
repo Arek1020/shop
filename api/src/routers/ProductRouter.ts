@@ -2,13 +2,15 @@ import { Router } from "express";
 import type { Request, Response } from "express";
 // import { productController } from "controllers/user.controller";
 import { ProductController } from "./../controllers/ProductController";
-import { Middleware } from "../controllers/middleware";
+import { Middleware } from "../controllers/Middleware";
 
 const router = Router();
 const productController = new ProductController();
 const middleware = new Middleware();
 
 router.post('/', middleware.isAuthorize, productController.get);
+router.post('/update', middleware.isAuthorize, productController.update);
+router.post('/photo/update', middleware.isAuthorize, productController.updatePhoto);
 // router.post('/edit', productController.edit);
 // router.post('/:id', productController.edit);
 //iki

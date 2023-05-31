@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import * as bcrypt from "bcrypt"
 import { config } from '../config/config'
-
+import * as jwt from "jsonwebtoken"
 export class UserController {
 
     private userRepository = AppDataSource.getRepository(User)
@@ -35,7 +35,6 @@ export class UserController {
     }
 
     async login(request: any, response: Response, next: NextFunction) {
-        console.log('loggin', request.body)
         let userRepository = AppDataSource.getRepository(User)
         let user = await userRepository.findOne({
             where: { email: request.body.email }
@@ -44,9 +43,14 @@ export class UserController {
         if (!user.id)
             return response.send({ msg: 'Brak użytkownika o takim adresie email.', err: true })
 
-        request.session.userId = user.id
+        // request.session.sid = 'asfafsd12321'
+        request.session.save()
+        delete user.password
+        console.log('uu', user, config.secretkey)
+        const token = jwt.sign({user}, config.secretkey);
+
         console.log('loggin', request.session)
-        return response.send({ msg: 'Zalogowano pomyślnie.' })
+        return response.send({ msg: 'Zalogowano pomyślnie.', token, user })
     }
 
     async all(request: Request, response: Response, next: NextFunction) {

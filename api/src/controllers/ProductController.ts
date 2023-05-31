@@ -2,6 +2,8 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { Product } from "../entity/Product"
 import { User } from "../entity/User"
+import Jimp = require("jimp")
+import tools from "../utils/tools"
 
 export class ProductController {
 
@@ -23,12 +25,8 @@ export class ProductController {
         return response.send(products)
     }
 
-    async all(request: Request, response: Response, next: NextFunction) {
-        return this.productRepository.find()
-    }
-
-
-    async save(request: Request, response: Response, next: NextFunction) {
+    async update(request: Request, response: Response, next: NextFunction) {
+        let productRepository = AppDataSource.getRepository(Product)
         const {
             name,
             description,
@@ -42,8 +40,44 @@ export class ProductController {
             price,
             image
         })
+        await productRepository.save(product)
+        return response.status(200).send({ msg: 'Zapisano pomyślnie' })
+    }
 
-        return this.productRepository.save(product)
+    async updatePhoto(request: Request, response: Response, next: NextFunction) {
+        let productRepository = AppDataSource.getRepository(Product)
+        console.log(request.body)
+        try {
+            const timestamp = Date.now()
+            const imageData = request.body.image; // Extract Base64-encoded image data from request body
+            const decodedImage = Buffer.from(imageData, 'base64'); // Decode the image data
+            const path = process.env.dirname + `/public/uploads/product_${request.body.id}_${timestamp}.png`;
+            await tools.saveImage(path, decodedImage)
+
+            Jimp.read(path)
+                .then((lenna) => {
+                    return lenna
+                        .resize(256, Jimp.AUTO) // resize
+                        .quality(30) // set JPEG quality
+                        .write(path); // save
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+
+            // const product = Object.assign(new Product(), {
+            //     name,
+            //     description,
+            //     price,
+            //     image
+            // })
+            await productRepository.save({
+                id: request.body.id,
+                image: path
+            })
+            return response.status(200).send({ msg: 'Zapisano pomyślnie' })
+        }
+        catch (err) { console.log(err) }
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {

@@ -15,13 +15,20 @@ const request = (path, opts, token) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': '/'
+                'Accept': '/',
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             body: JSON.stringify(opts),
         })
             .then(async res => {
                 res = await res.json()
                 try {
+                    console.log(res)
+                    if (res.status === 403)
+                        window.location.href = '/login'
+                    if (res.status > 500)
+                        return { err: true, msg: 'UPSS! Coś poszło nie tak. Spróbuj ponownie później lub skontaktuj sie z administratorem. Status błędu: ' + res.status }
+
                     if (res.err || res.error) {
                         return reject([res.msg || res.error, res]);
                     } else {

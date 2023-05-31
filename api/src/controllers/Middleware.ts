@@ -2,15 +2,23 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import * as bcrypt from "bcrypt"
-import { config } from '../config/config'
+import * as jwt from "jsonwebtoken"
+import { config } from "../config/config"
+
 
 export class Middleware {
 
     async isAuthorize(request: any, response: Response, next: NextFunction) {
-        console.log(request.session)
-        if(request.session.userId)
-            return next()
-        return response.status(403).send({ msg: 'Brak uprawnień.' })
+        const token = request.get("Authorization").split(' ')[1];
+        let decodedToken;
+        try {
+            decodedToken = jwt.verify(token, config.secretkey);
+        } catch (err) {
+            console.log(err)
+            return response.status(403).json({ status: 403, err: true, message: 'Brak autoryzacji - nieprawidłowy token' });
+        };
+        response.locals.user = decodedToken
+        return next()
     }
 
 }

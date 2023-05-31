@@ -17,11 +17,11 @@ const Products = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    // request(`/products`)
-    //   .then((result) => {
-    //     console.log('sdfgdsz', result)
-    //     setData(result)
-    //   })
+    request(`/products`)
+      .then((result) => {
+        console.log('sdfgdsz', result)
+        setData(result)
+      })
   }, [])
   return (
     <Container>

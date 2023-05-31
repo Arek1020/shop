@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { useFormik, Formik } from "formik";
+import { Formik } from "formik";
 import moment from 'moment'
 import request from "../utils/Request";
 import { toast } from 'react-toastify';
@@ -102,22 +102,19 @@ const Register = () => {
               request(`/user/register`, values),
               {
                 pending: 'Promise is pending',
-                success:  {render({data}){
-                  window.location.href = '/login'
-                  return `${data.msg}`
-                }},
-                error: {render({data}){
-                  return `${data[0]}`
-                }},
+                success: {
+                  render({ data }) {
+                    window.location.href = '/login'
+                    return `${data.msg}`
+                  }
+                },
+                error: {
+                  render({ data }) {
+                    return `${data[0]}`
+                  }
+                },
               }
-          )
-            // request(`/user/register`, values)
-            //   .then((resp) => {
-            //     console.log('rr', resp)
-            //     if (resp.err)
-            //       alert(resp.msg)
-            //   })
-            //   .catch(err => alert(err[0]))
+            )
           }}
         >
           {({

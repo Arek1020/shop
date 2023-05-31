@@ -30,12 +30,13 @@ const sessionPool = require('pg').Pool
 import indexRouter from './routers/IndexRouter'
 import userRouter from './routers/UserRouter'
 import productRouter from './routers/ProductRouter'
+import cartRouter from './routers/CartRouter'
 
 
 const server = {
     init: async () => {
         await AppDataSource.initialize()
-
+        process.env.dirname = __dirname
         // create express app
         const app = express()
 
@@ -48,9 +49,15 @@ const server = {
         });
         // Create a session store using connect-pg-simple
         const pgSessionStore = pgSession(session);
-        app.use(cookieParser());
+        app.use(cors({
+            origin: config.viewUrl,
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization'],
+            // credentials: true
+        }));
         app.use(
             session({
+                key: 'sid',
                 store: new pgSessionStore({
                     pool,
                     tableName: 'session', // Name of the table to store sessions
@@ -58,18 +65,14 @@ const server = {
                 secret: 'your-secret', // Replace with your own secret
                 resave: false,
                 saveUninitialized: false,
-                cookie: { secure: false }, // Set "secure: true" for HTTPS
+                cookie: { domain: '', secure: false }, // Set "secure: true" for HTTPS
             })
         );
+        app.use(cookieParser());
 
         app.use(bodyParser.json())
 
-        app.use(cors({
-            origin: config.viewUrl,
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization'],
-            // credentials: true
-        }));
+
 
         // app.use(session({
         //     key: 'sid',
@@ -87,10 +90,15 @@ const server = {
         //     console.log(req.session)
         //     return next(404)
         // });
+        app.use((req: any, res: Response, next: Function) => {
+            req.session.sid = 'UfOLvYjD6DhRfvpvKhZSPOxVLfgRz2Mz'
+            return next()
+        });
 
         app.use('/', indexRouter);
         app.use(['/user', '/users'], userRouter);
         app.use(['/product', '/products'], productRouter);
+        app.use(['/cart', '/carts'], cartRouter);
 
 
         app.use((req: Request, res: Response, next: Function) => {
