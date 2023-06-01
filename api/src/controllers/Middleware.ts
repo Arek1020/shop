@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import * as bcrypt from "bcrypt"
 import * as jwt from "jsonwebtoken"
-import { config } from "../config/config"
+import { config } from "../config"
 
 
 export class Middleware {

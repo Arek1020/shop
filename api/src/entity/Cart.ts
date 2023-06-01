@@ -10,7 +10,7 @@ export class Cart {
     date: string
 
     @Column()
-    product: number
+    payment_date: string
 
     @Column()
     user: number

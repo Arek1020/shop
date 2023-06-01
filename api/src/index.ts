@@ -5,7 +5,7 @@ import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
 import { User } from "./entity/User"
 import { Product } from "./entity/Product"
-import { config } from './config/config';
+import { config } from './config';
 import * as cors from 'cors';
 import * as session from 'express-session';
 // import * as pgSession from 'connect-pg-simple';

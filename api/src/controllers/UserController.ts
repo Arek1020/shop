@@ -2,7 +2,7 @@ import { AppDataSource } from "../data-source"
 import { NextFunction, Request, Response } from "express"
 import { User } from "../entity/User"
 import * as bcrypt from "bcrypt"
-import { config } from '../config/config'
+import { config } from '../config'
 import * as jwt from "jsonwebtoken"
 export class UserController {
 
