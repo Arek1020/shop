@@ -69,7 +69,6 @@ const Login = () => {
   const [password, setPassword] = useState(null)
 
   const handleSubmit = (event) => {
-    console.log('sadfsa', email, password)
     toast.promise(
       request(`/user/login`, { email, password }),
       {

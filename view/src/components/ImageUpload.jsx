@@ -27,7 +27,6 @@ export default function ImageUpload(props) {
 
   const onChange = async (imageList, addUpdateIndex) => {
     setImages(imageList);
-    console.log(imageList[0].data_url)
     // var form = new FormData();
     // form.append(props.name, imageList[0].file);
     // form.append('user', user().id);

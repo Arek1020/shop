@@ -17,7 +17,6 @@ export class UserController {
         let dbUser = await userRepository.findOne({
             where: { email: request.body.email }
         })
-        console.log('sds', request.body)
         if (dbUser)
             return response.send({ err: true, msg: 'Istnieje już użytkownik z takim adresem email' })
 
@@ -46,10 +45,8 @@ export class UserController {
         // request.session.sid = 'asfafsd12321'
         request.session.save()
         delete user.password
-        console.log('uu', user, config.secretkey)
         const token = jwt.sign({user}, config.secretkey);
 
-        console.log('loggin', request.session)
         return response.send({ msg: 'Zalogowano pomyślnie.', token, user })
     }
 

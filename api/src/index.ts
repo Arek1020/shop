@@ -86,10 +86,6 @@ const server = {
         //     store: sessionStore
         // }));
 
-        // app.use((req: any, res: Response, next: Function) => {
-        //     console.log(req.session)
-        //     return next(404)
-        // });
         app.use((req: any, res: Response, next: Function) => {
             req.session.sid = 'UfOLvYjD6DhRfvpvKhZSPOxVLfgRz2Mz'
             return next()

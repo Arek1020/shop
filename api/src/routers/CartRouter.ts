@@ -10,7 +10,9 @@ const middleware = new Middleware();
 
 router.post('/', middleware.isAuthorize, cartController.get);
 router.post('/update', middleware.isAuthorize, cartController.update);
-router.post('/product/update', middleware.isAuthorize, cartController.update);
+router.post('/pay', middleware.isAuthorize, cartController.pay);
+router.post('/products/update', middleware.isAuthorize, cartController.updateProduct);
+router.post('/products/amount', middleware.isAuthorize, cartController.getProductsAmount);
 
 
 export default router;

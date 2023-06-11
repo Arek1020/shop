@@ -19,7 +19,6 @@ const Products = () => {
   useEffect(() => {
     request(`/products`)
       .then((result) => {
-        console.log('sdfgdsz', result)
         setData(result)
       })
   }, [])

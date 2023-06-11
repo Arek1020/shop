@@ -5,6 +5,7 @@ import { sliderItems } from "../data";
 import { mobile } from "../responsive";
 import request from "../utils/Request";
 import { SERVER_URL } from "../config";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 100%;
@@ -132,9 +133,14 @@ const Slider = () => {
               <Image src={SERVER_URL + '' + item.Logo_url} />
             </ImgContainer>
             <InfoContainer>
-              <Title>{item.title}</Title>
-              <Desc>{item.Opis_skrot}</Desc>
-              <Button>SHOW NOW</Button>
+              <Title>{item.name}</Title>
+              <Desc>{item.description}</Desc>
+              <Link
+                to={'/product/' + item.id}
+                style={{ textDecoration: 'none', color: '#000' }}
+              >
+                <Button>Wiecej</Button>
+              </Link>
             </InfoContainer>
           </Slide>
         ))}

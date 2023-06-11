@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm"
+
 
 @Entity()
 export class Cart {
@@ -6,7 +7,7 @@ export class Cart {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({nullable: true,})
     date: string
 
     @Column()
@@ -19,10 +20,18 @@ export class Cart {
     price: number
 
     @Column({
-        nullable: true
+        nullable: true,
+        type: 'simple-json'
     })
-    orderDetails: string
+    orderDetails: {
+        products: Object[]
+    }
 
-   
+    // @CreateDateColumn()
+    // createDate: Date
+
+    // @UpdateDateColumn()
+    // updateDate: Date
+
 
 }

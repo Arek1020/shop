@@ -1,9 +1,10 @@
 import { Badge } from "@material-ui/core";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
+import request from "../utils/Request";
 
 const Container = styled.div`
   height: 60px;
@@ -70,7 +71,13 @@ const MenuItem = styled.div`
 const Navbar = () => {
 
   const user = JSON.parse(localStorage.getItem('user') || '{}')
-  console.log('ssss', user)
+
+  const [data, setData] = useState(0)
+
+  useEffect(() => {
+    request('/cart/products/amount')
+      .then(r => { setData(r) })
+  }, [])
   return (
     <Container>
       <Wrapper>
@@ -87,19 +94,21 @@ const Navbar = () => {
           </Link>
         </Center>
         <Right>
-          <MenuItem>
-            {user ? (
-              <div>Witaj! {user?.firstName}</div>
-            ) : (
-              <Link to={'/login'} style={{ textDecoration: 'none', color: '#000' }}>
-                ZALOGUJ SIĘ
-              </Link>
-            )}
 
+          <MenuItem>
+            <Link to={'/profile/orders'} style={{ textDecoration: 'none' }} >
+              {user ? (
+                <div>Witaj! {user?.firstName}</div>
+              ) : (
+                <Link to={'/login'} style={{ textDecoration: 'none', color: '#000' }}>
+                  ZALOGUJ SIĘ
+                </Link>
+              )}
+            </Link>
           </MenuItem>
           <MenuItem>
             <Link to={'/cart'} style={{ textDecoration: 'none' }} >
-              <Badge badgeContent={4} color="primary">
+              <Badge badgeContent={data.amount || 0} color="primary">
                 <ShoppingCartOutlined />
               </Badge>
             </Link>

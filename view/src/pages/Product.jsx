@@ -122,7 +122,6 @@ const Button = styled.button`
 
 const Product = (props) => {
   const params = useParams()
-  console.log('dsad', params)
 
   const [data, setData] = useState({})
 
@@ -142,17 +141,18 @@ const Product = (props) => {
   const addToCart = () => {
     let userDetails = JSON.parse(localStorage.getItem('user'))
     toast.promise(
-      request(`/cart/update`, {
+      request(`/cart/products/update`, {
         ...data,
-        product: data.id,
+        product: { id: data.id, usersAmount, period },
         user: userDetails.id,
         sum: price,
-        orderDetails: { usersAmount, period }
+        // orderDetails: { usersAmount, period }
       }),
       {
         pending: 'Promise is pending',
         success: {
           render({ data }) {
+            window.location.href = '/cart'
             return `${data.msg}`
           }
         },

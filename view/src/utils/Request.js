@@ -23,7 +23,6 @@ const request = (path, opts, token) => {
             .then(async res => {
                 res = await res.json()
                 try {
-                    console.log(res)
                     if (res.status === 403)
                         window.location.href = '/login'
                     if (res.status > 500)

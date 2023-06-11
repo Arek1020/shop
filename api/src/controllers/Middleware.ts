@@ -17,7 +17,7 @@ export class Middleware {
             console.log(err)
             return response.status(403).json({ status: 403, err: true, message: 'Brak autoryzacji - nieprawidłowy token' });
         };
-        response.locals.user = decodedToken
+        response.locals.user = decodedToken.user
         return next()
     }
 

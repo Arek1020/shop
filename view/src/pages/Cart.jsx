@@ -4,6 +4,11 @@ import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { mobile } from "./../responsive";
+import { useEffect, useState } from "react";
+import request from "../utils/Request";
+import defaultProductImage from '../images/defaultProductImage.jpg'
+import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 const Container = styled.div``;
 
@@ -57,6 +62,8 @@ const Info = styled.div`
 const Product = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom 10px;
+
   ${mobile({ flexDirection: "column" })}
 `;
 
@@ -67,6 +74,7 @@ const ProductDetail = styled.div`
 
 const Image = styled.img`
   width: 200px;
+  border-radius: 10px;
 `;
 
 const Details = styled.div`
@@ -154,48 +162,90 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
+
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    request(`/cart`)
+      .then((r) => { setData(r) })
+  }, [])
+
+  const payCart = () => {
+    let userDetails = JSON.parse(localStorage.getItem('user'))
+    toast.promise(
+      request(`/cart/pay`, {
+        id: data.id
+        // orderDetails: { usersAmount, period }
+      }),
+      {
+        pending: 'Promise is pending',
+        success: {
+          render({ data }) {
+            window.location.href = '/profile/orders'
+            return `${data.msg}`
+          }
+        },
+        error: {
+          render({ data }) {
+            return `${data[0]}`
+          }
+        },
+      }
+    )
+  }
+
   return (
     <Container>
       <Navbar />
       <Announcement />
       <Wrapper>
-        <Title>YOUR BAG</Title>
+        <Title>TWÓJ KOSZYK</Title>
         <Top>
-          <TopButton>CONTINUE SHOPPING</TopButton>
+          <Link to={'/'} style={{ textDecoration: 'none', color: '#000' }} >
+            <TopButton onClick={() => { }}>KONTYNUUJ ZKAUPY</TopButton>
+          </Link>
           <TopTexts>
-            <TopText>Shopping Bag(2)</TopText>
-            <TopText>Your Wishlist (0)</TopText>
+            {/* <TopText>Shopping Bag(2)</TopText>
+            <TopText>Your Wishlist (0)</TopText> */}
           </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          {data?.orderDetails?.products?.length > 0 &&
+            <TopButton type="filled">ZAMAWIAM I PŁACĘ</TopButton>
+          }
         </Top>
         <Bottom>
           <Info>
-            <Product>
-              <ProductDetail>
-                <Image src="https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1614188818-TD1MTHU_SHOE_ANGLE_GLOBAL_MENS_TREE_DASHERS_THUNDER_b01b1013-cd8d-48e7-bed9-52db26515dc4.png?crop=1xw:1.00xh;center,top&resize=480%3A%2A" />
-                <Details>
-                  <ProductName>
-                    <b>Product:</b> JESSIE THUNDER SHOES
-                  </ProductName>
-                  <ProductId>
-                    <b>ID:</b> 93813718293
-                  </ProductId>
-                  <ProductColor color="black" />
-                  <ProductSize>
-                    <b>Size:</b> 37.5
-                  </ProductSize>
-                </Details>
-              </ProductDetail>
-              <PriceDetail>
-                <ProductAmountContainer>
-                  <Add />
-                  <ProductAmount>2</ProductAmount>
-                  <Remove />
-                </ProductAmountContainer>
-                <ProductPrice>$ 30</ProductPrice>
-              </PriceDetail>
-            </Product>
-            <Hr />
+            {!data?.orderDetails?.products && 'Twój koszyk jest pusty'}
+            {data?.orderDetails?.products?.map((product, index) => {
+              return (
+                <Product key={index}>
+                  <ProductDetail>
+                    <Image src={product.image || defaultProductImage} />
+                    <Details>
+                      <ProductName>
+                        <b>Product:</b> {product.name}
+                      </ProductName>
+                      <ProductId>
+                        <b>ID:</b> {product.id}
+                      </ProductId>
+                      {/* <ProductColor color="black" /> */}
+                      <ProductSize>
+                        <b>Czas trwania:</b> {product.period}
+                      </ProductSize>
+                    </Details>
+                  </ProductDetail>
+                  <PriceDetail>
+                    <ProductAmountContainer>
+                      {/* <Add /> */}
+                      <ProductAmount> {product.usersAmount}</ProductAmount>
+                      {/* <Remove /> */}
+                    </ProductAmountContainer>
+                    <ProductPrice> {product.price}zł</ProductPrice>
+                  </PriceDetail>
+                </Product>
+              )
+            })}
+
+            {/* <Hr />
             <Product>
               <ProductDetail>
                 <Image src="https://i.pinimg.com/originals/2d/af/f8/2daff8e0823e51dd752704a47d5b795c.png" />
@@ -220,27 +270,29 @@ const Cart = () => {
                 </ProductAmountContainer>
                 <ProductPrice>$ 20</ProductPrice>
               </PriceDetail>
-            </Product>
+            </Product> */}
           </Info>
           <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+            <SummaryTitle>PODSUMOWANIE ZAMÓWIENIA</SummaryTitle>
             <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemText>Cena zamówienia</SummaryItemText>
+              <SummaryItemPrice>{data.totalPrice || '0'}zł</SummaryItemPrice>
             </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
+            {/* <SummaryItem>
+              <SummaryItemText>Cena wysyłki</SummaryItemText>
+              <SummaryItemPrice>16.7zł</SummaryItemPrice>
+            </SummaryItem> */}
+            {/* <SummaryItem>
               <SummaryItemText>Shipping Discount</SummaryItemText>
               <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-            </SummaryItem>
+            </SummaryItem> */}
             <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemText>Razem</SummaryItemText>
+              <SummaryItemPrice>{(data.totalPrice || 0)}zł</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            {data?.orderDetails?.products?.length > 0 &&
+              <Button onClick={() => { payCart() }}>ZAMAWIAM I PŁACĘ</Button>
+            }
           </Summary>
         </Bottom>
       </Wrapper>

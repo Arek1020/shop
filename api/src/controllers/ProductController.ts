@@ -46,7 +46,6 @@ export class ProductController {
 
     async updatePhoto(request: Request, response: Response, next: NextFunction) {
         let productRepository = AppDataSource.getRepository(Product)
-        console.log(request.body)
         try {
             const timestamp = Date.now()
             const imageData = request.body.image; // Extract Base64-encoded image data from request body

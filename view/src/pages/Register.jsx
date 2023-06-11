@@ -73,7 +73,6 @@ const Register = () => {
   //     return errors;
   //   },
   //   onSubmit: async (values) => {
-  //     console.log('asdfs', values)
   //     formik.validateForm();
   //     request(`/login`, values)
 

@@ -14,6 +14,9 @@ const tools = {
                 }
             })
         })
+    },
+    calcProductPrice: (price, usersAmount, period) => {
+        return price + (usersAmount * 20) + (period * 8.5)
     }
 }
 
