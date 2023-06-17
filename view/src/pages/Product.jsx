@@ -24,8 +24,8 @@ const ImgContainer = styled.div`
 `;
 
 const Image = styled.img`
-  width: 100%;
-  height: 90vh;
+  width: 70%;
+  height: 50vh;
   object-fit: cover;
   ${mobile({ height: "40vh" })}
 `;
@@ -171,7 +171,7 @@ const Product = (props) => {
       <Announcement />
       <Wrapper>
         <ImgContainer>
-          <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
+          <Image src={SERVER_URL + '' + data?.image} />
         </ImgContainer>
         <InfoContainer>
           <Title>{data?.name}</Title>
@@ -240,6 +240,7 @@ const Product = (props) => {
           </AddContainer>
         </InfoContainer>
       </Wrapper>
+      <div style={{height: '30vh'}}></div>
       <Newsletter />
       <Footer />
     </Container>

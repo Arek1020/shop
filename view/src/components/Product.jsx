@@ -97,7 +97,7 @@ const Product = ({ item }) => {
       onMouseLeave={() => setMenuVisible(false)}
     >
       <Circle />
-      <Image src={SERVER_URL + '/' + item.Logo_url} />
+      <Image src={SERVER_URL + '/' + item.image} />
       <Info style={{ opacity: menuVisible ? 1 : 0 }}>
         <Icon>
           <ShoppingCartOutlined />

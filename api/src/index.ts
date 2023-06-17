@@ -8,6 +8,7 @@ import { Product } from "./entity/Product"
 import { config } from './config';
 import * as cors from 'cors';
 import * as session from 'express-session';
+import * as path from 'path'
 // import * as pgSession from 'connect-pg-simple';
 
 
@@ -16,16 +17,6 @@ import * as pgSession from 'connect-pg-simple';
 import * as cookieParser from 'cookie-parser';
 
 const sessionPool = require('pg').Pool
-
-// const PostgresqlStore = genFunc(session);
-// const sessionStore = new PostgresqlStore({
-//     conString: `postgres://${config.db.username}:${config.db.password}@${config.db.host}:${config.db.port}/${config.db.database}`,
-// });
-
-// const sessionStore = new pgSession({
-//     pool: sessionDBaccess,
-//     tableName: 'session'
-// }),
 
 import indexRouter from './routers/IndexRouter'
 import userRouter from './routers/UserRouter'
@@ -55,6 +46,9 @@ const server = {
             allowedHeaders: ['Content-Type', 'Authorization'],
             // credentials: true
         }));
+
+        app.use(express.static(path.join(__dirname, 'uploads')));
+
         app.use(
             session({
                 key: 'sid',

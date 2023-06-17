@@ -130,7 +130,7 @@ const Slider = () => {
         {data.map((item) => (
           <Slide bg={item.bg} key={item.id}>
             <ImgContainer>
-              <Image src={SERVER_URL + '' + item.Logo_url} />
+              <Image src={SERVER_URL + '' + item.image} />
             </ImgContainer>
             <InfoContainer>
               <Title>{item.name}</Title>

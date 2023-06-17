@@ -9,6 +9,7 @@ import request from "../utils/Request";
 import defaultProductImage from '../images/defaultProductImage.jpg'
 import { Link } from "react-router-dom";
 import { toast } from 'react-toastify';
+import { SERVER_URL } from "../config";
 
 const Container = styled.div``;
 
@@ -219,7 +220,7 @@ const Cart = () => {
               return (
                 <Product key={index}>
                   <ProductDetail>
-                    <Image src={product.image || defaultProductImage} />
+                    <Image src={SERVER_URL + '' + product.image || defaultProductImage} />
                     <Details>
                       <ProductName>
                         <b>Product:</b> {product.name}

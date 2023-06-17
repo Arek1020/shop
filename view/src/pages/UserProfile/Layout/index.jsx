@@ -5,7 +5,7 @@ import { LeftMenu } from '../../../components/UserProfile/LeftMenu'
 const index = (props) => {
     return (
         <div>
-            <Navbar />
+            <Navbar color={'#008080'} />
             <div style={{display: 'flex'}}>
                 <LeftMenu />
                 <div style={{width: 'calc(100vw - 160px)'}}>

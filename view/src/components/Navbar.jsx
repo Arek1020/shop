@@ -68,7 +68,7 @@ const MenuItem = styled.div`
   ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `;
 
-const Navbar = () => {
+const Navbar = (params) => {
 
   const user = JSON.parse(localStorage.getItem('user') || '{}')
 
@@ -79,7 +79,7 @@ const Navbar = () => {
       .then(r => { setData(r) })
   }, [])
   return (
-    <Container>
+    <Container style={{backgroundColor: params.color || '#fff'}}>
       <Wrapper>
         <Left>
           {/* <Language>EN</Language>
@@ -98,7 +98,7 @@ const Navbar = () => {
           <MenuItem>
             <Link to={'/profile/orders'} style={{ textDecoration: 'none' }} >
               {user ? (
-                <div>Witaj! {user?.firstName}</div>
+                <div style={{textDecoration: 'none', color: '#000'}}>Witaj! {user?.firstName}</div>
               ) : (
                 <Link to={'/login'} style={{ textDecoration: 'none', color: '#000' }}>
                   ZALOGUJ SIĘ
@@ -109,7 +109,7 @@ const Navbar = () => {
           <MenuItem>
             <Link to={'/cart'} style={{ textDecoration: 'none' }} >
               <Badge badgeContent={data.amount || 0} color="primary">
-                <ShoppingCartOutlined />
+                <ShoppingCartOutlined style={{textDecoration: 'none', color: '#000'}}/>
               </Badge>
             </Link>
           </MenuItem>
