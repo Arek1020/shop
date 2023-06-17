@@ -14,7 +14,7 @@ export class Middleware {
         try {
             decodedToken = jwt.verify(token, config.secretkey);
         } catch (err) {
-            console.log(err)
+            // console.log(err)
             return response.status(403).json({ status: 403, err: true, message: 'Brak autoryzacji - nieprawidłowy token' });
         };
         response.locals.user = decodedToken.user
