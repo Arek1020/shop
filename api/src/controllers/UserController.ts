@@ -4,6 +4,7 @@ import { User } from "../entity/User"
 import * as bcrypt from "bcrypt"
 import { config } from '../config'
 import * as jwt from "jsonwebtoken"
+import mailer from "../utils/mailer";
 export class UserController {
 
     private userRepository = AppDataSource.getRepository(User)
@@ -29,6 +30,15 @@ export class UserController {
         })
 
         userRepository.save(user)
+        mailer.send({
+            to: request.body.email,
+            subject: 'KusArch. :: Nowe konto',
+            body: `<p>Szanowni Państwo, <br>
+            chcieliśmy poinformować, że zostało dla Państwa utworzone nowe konto w serwisie KusArch. <br>
+            <p>Jeśli prośba nie została wysłana przez Ciebie, zignoruj tę wiadomość. <br>
+            Dziękujemy za korzystanie z naszego systemu. Życzymy owocnych zakupów.</p>`
+            
+        })
 
         return response.send({ msg: 'Pomyślnie utworzono użytkownika.' })
     }

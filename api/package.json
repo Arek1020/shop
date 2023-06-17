@@ -29,6 +29,8 @@
       "jimp": "^0.22.8",
       "jsonwebtoken": "^9.0.0",
       "moment": "^2.29.4",
+      "nodemailer": "^6.9.3",
+      "nodemailer-plugin-inline-base64": "^2.1.1",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
       "typeorm": "0.3.16"

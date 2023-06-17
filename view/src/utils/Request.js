@@ -1,4 +1,4 @@
-
+import config from "../config";
 const request = (path, opts, token) => {
     console.log('REQUEST: ', path)
     return new Promise(async (resolve, reject) => {
@@ -11,7 +11,7 @@ const request = (path, opts, token) => {
         //     opts.cid = currentCompany.ID
         // }
 
-        fetch(`http://localhost:8000${path}`, {
+        fetch(`${config.SERVER_URL}${path}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
