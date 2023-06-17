@@ -40,13 +40,24 @@ const server = {
         });
         // Create a session store using connect-pg-simple
         const pgSessionStore = pgSession(session);
-        app.use(cors({
-            origin: config.viewUrl,
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization'],
-            // credentials: true
-        }));
+        // app.use(cors({
+        //     origin: config.viewUrl,
+        //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        //     allowedHeaders: ['Content-Type', 'Authorization'],
+        //     // credentials: true
+        // }));
 
+        app.use('*', function (req, res, next) {
+            if (req.headers.origin?.includes('54.93.81.169')) {
+                res.header("Access-Control-Allow-Origin", "");
+                res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, sid, key, secretkey");
+                if (req.headers['access-control-request-headers'])
+                    return res.end()
+            }
+            return next();
+
+        })
+        
         app.use(express.static(path.join(__dirname, 'uploads')));
 
         app.use(
