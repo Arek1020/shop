@@ -47,16 +47,24 @@ const server = {
         //     // credentials: true
         // }));
 
-        app.use('*', function (req, res, next) {
-            if (req.headers.origin?.includes('54.93.81.169')) {
-                res.header("Access-Control-Allow-Origin", "");
-                res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, sid, key, secretkey");
-                if (req.headers['access-control-request-headers'])
-                    return res.end()
-            }
-            return next();
+        // app.use('*', function (req, res, next) {
+        //     if (req.headers.origin?.includes('54.93.81.169')) {
+        //         res.header("Access-Control-Allow-Origin", "");
+        //         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, sid, key, secretkey");
+        //         if (req.headers['access-control-request-headers'])
+        //             return res.end()
+        //     }
+        //     return next();
 
-        })
+        // })
+
+        app.use(function(req, res, next) {                                                                                                                                             
+            // res.header("Access-Control-Allow-Origin", "http://35.158.231.177:9000");                                                                                                   
+            res.header("Access-Control-Allow-Origin", config.viewUrl);                                                                                                   
+            res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");                                                                                             
+            res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");                                                                                                 
+            next();                                                                                                                                                                    
+        });
         
         app.use(express.static(path.join(__dirname, 'uploads')));
 

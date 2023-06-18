@@ -37,25 +37,28 @@ export class UserController {
             chcieliśmy poinformować, że zostało dla Państwa utworzone nowe konto w serwisie KusArch. <br>
             <p>Jeśli prośba nie została wysłana przez Ciebie, zignoruj tę wiadomość. <br>
             Dziękujemy za korzystanie z naszego systemu. Życzymy owocnych zakupów.</p>`
-            
+
         })
 
         return response.send({ msg: 'Pomyślnie utworzono użytkownika.' })
     }
 
     async login(request: any, response: Response, next: NextFunction) {
+        if (!request.body.email || !request.body.password)
+            return response.send({ msg: 'Nieprawidłowe dane.', err: true })
+
         let userRepository = AppDataSource.getRepository(User)
         let user = await userRepository.findOne({
             where: { email: request.body.email }
         })
-        
-        if (!user.id)
+
+        if (!user?.id)
             return response.send({ msg: 'Brak użytkownika o takim adresie email.', err: true })
 
         // request.session.sid = 'asfafsd12321'
         request.session.save()
         delete user.password
-        const token = jwt.sign({user}, config.secretkey);
+        const token = jwt.sign({ user }, config.secretkey);
 
         return response.send({ msg: 'Zalogowano pomyślnie.', token, user })
     }

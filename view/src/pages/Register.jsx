@@ -4,6 +4,7 @@ import { Formik } from "formik";
 import moment from 'moment'
 import request from "../utils/Request";
 import { toast } from 'react-toastify';
+import slide from '../images/slide.png'
 
 const Container = styled.div`
   width: 100vw;
@@ -12,7 +13,7 @@ const Container = styled.div`
       rgba(255, 255, 255, 0.5),
       rgba(255, 255, 255, 0.5)
     ),
-    url("https://images.pexels.com/photos/6984661/pexels-photo-6984661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
+    url(${slide})
       center;
   background-size: cover;
   display: flex;
@@ -82,7 +83,7 @@ const Register = () => {
   return (
     <Container>
       <Wrapper>
-        <Title>CREATE AN ACCOUNT</Title>
+        <Title>STWÓRZ NOWE KONTO</Title>
         <Formik
           initialValues={{ email: '', password: '' }}
           validate={values => {
@@ -177,10 +178,9 @@ const Register = () => {
                 value={values.reapeatPassword}
               />
               <Agreement>
-                By creating an account, I consent to the processing of my personal
-                data in accordance with the <b>PRIVACY POLICY</b>
+                Tworząc konto akceptujesz naszą <b>POLITYKĘ PRYWATNOŚCI</b>.
               </Agreement>
-              <Button>CREATE</Button>
+              <Button>STWÓRZ</Button>
             </Form>
           )}
         </Formik>
