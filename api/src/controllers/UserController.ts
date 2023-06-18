@@ -45,23 +45,28 @@ export class UserController {
 
     async login(request: any, response: Response, next: NextFunction) {
         if (!request.body.email || !request.body.password)
-            return response.send({ msg: 'Nieprawidłowe dane.', err: true })
-
-        let userRepository = AppDataSource.getRepository(User)
+            return response.send({ msg: 'Nieprawidłowe dane.', err: true });
+    
+        let userRepository = AppDataSource.getRepository(User);
         let user = await userRepository.findOne({
             where: { email: request.body.email }
-        })
-
-        if (!user?.id)
-            return response.send({ msg: 'Brak użytkownika o takim adresie email.', err: true })
-
-        // request.session.sid = 'asfafsd12321'
-        request.session.save()
-        delete user.password
+        });
+    
+        if (!user)
+            return response.send({ msg: 'Brak użytkownika o takim adresie email.', err: true });
+    
+        // Sprawdzenie poprawności hasła
+        const passwordMatch = await bcrypt.compare(request.body.password, user.password);
+        if (!passwordMatch)
+            return response.send({ msg: 'Nieprawidłowe hasło.', err: true });
+    
+        request.session.save();
+        delete user.password;
         const token = jwt.sign({ user }, config.secretkey);
-
-        return response.send({ msg: 'Zalogowano pomyślnie.', token, user })
+    
+        return response.send({ msg: 'Zalogowano pomyślnie.', token, user });
     }
+    
 
     async all(request: Request, response: Response, next: NextFunction) {
         return this.userRepository.find()
