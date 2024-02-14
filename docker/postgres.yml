@@ -1,9 +1,0 @@
-version: '3'
-
-services:
-  mysql:
-    container_name: postgres_db
-    image: postgres_db:latest
-    ports:
-      - "5432:5432"
-    restart: always

@@ -20,4 +20,3 @@ elif [ $1 == "down" ]; then
     docker-compose  \
     -f app.yml $1
 fi
-

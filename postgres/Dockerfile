@@ -7,7 +7,11 @@ ENV POSTGRES_PASSWORD=postgres
 ENV POSTGRES_DB=shop
 
 # Copy initialization scripts to the container
-COPY shopDB.sql /.
+
+USER postgres
 
 # Expose PostgreSQL port
 EXPOSE 5432
+
+COPY shop_db.sql /.
+COPY setup.sh /docker-entrypoint-initdb.d/
