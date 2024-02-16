@@ -5,7 +5,7 @@ import { Product } from "../entity/Product"
 import { User } from "../entity/User"
 import Jimp = require("jimp")
 import tools from "../utils/tools"
-import * as moment from "moment"
+import moment from "moment"
 import { IsNull, Not } from "typeorm"
 
 interface prod {
